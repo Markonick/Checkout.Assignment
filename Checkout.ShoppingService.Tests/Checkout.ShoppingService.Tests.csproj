@@ -35,7 +35,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Checkout">
-      <HintPath>..\..\Checkout.ApiClient\Checkout.ApiClient.Net45\bin\Debug\Checkout.dll</HintPath>
+      <HintPath>..\Checkout.ApiClient.Net45\bin\Debug\Checkout.dll</HintPath>
     </Reference>
     <Reference Include="Checkout.ShoppingService">
       <HintPath>..\Checkout.ShoppingService\bin\Debug\Checkout.ShoppingService.exe</HintPath>
