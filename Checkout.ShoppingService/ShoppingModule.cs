@@ -32,15 +32,15 @@ namespace Checkout.ShoppingService
             try
             {
                 //Service
-                var result = _repository.GetDrinksList();
+                var drinkList = _repository.GetDrinksList();
 
-                if (result == null)
+                if (drinkList.Count == 0)
                 {
                     var errorMessage = new ErrorMessage { Message = "NotFound" };
                     return Negotiate.WithModel(errorMessage).WithStatusCode(HttpStatusCode.NotFound);
                 }
 
-                return Negotiate.WithModel(result).WithStatusCode(HttpStatusCode.OK);
+                return Negotiate.WithModel(drinkList).WithStatusCode(HttpStatusCode.OK);
             }
             catch (Exception)
             {

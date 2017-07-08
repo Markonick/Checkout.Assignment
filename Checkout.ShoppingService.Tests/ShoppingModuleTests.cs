@@ -35,10 +35,11 @@ namespace Checkout.ShoppingService.Tests
         [TestCase("San Pellegrino", "10")]
         public void GetDrinks_empty_should_return_notFound(string name, string quantity)
         {
-            _repository.Setup(repo => repo.GetDrinksList()).Returns(new List<Drink>());
+            var emptyList = new List<Drink>();
+            _repository.Setup(repo => repo.GetDrinksList()).Returns(emptyList);
 
-            var response = _browser.Get("/", with => {
-                with.HttpRequest();
+            var response = _browser.Get("/shopping", with => {
+                with.Header("Accept", "application/json");
             });
 
             Assert.That(response.StatusCode.ToString(), Is.EqualTo(HttpStatusCode.NotFound.ToString()));
@@ -50,17 +51,15 @@ namespace Checkout.ShoppingService.Tests
         {
             var drink = new Drink {Name = name, Quantity = int.Parse(quantity)};
             var drinkRequest = new DrinkModel { Name = name, Quantity = quantity };
-
+            
             _repository.Setup(repo => repo.AddDrink(drink)).Returns(true);
-
-            var body = drinkRequest;
-            var json = JsonConvert.SerializeObject(body);
-
-            var response = _browser.Post("/name/quantity", with => {
-                with.HttpRequest();
-                with.Body(json, "application/json");
+            _validator.Setup(validator => validator.GetResult(drinkRequest, true)).Returns("Passed request validations!");
+            
+            var response = _browser.Post("/shopping/name/quantity", with =>
+            {
+                with.JsonBody(drinkRequest);
             });
-
+            
             Assert.That(response.StatusCode.ToString(), Is.EqualTo(HttpStatusCode.OK.ToString()));
         }
 
