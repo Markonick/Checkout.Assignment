@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using Checkout.ApiServices.Shopping.RequestModels;
 using NUnit.Framework;
 using Nancy.Testing;
 using Checkout.ShoppingService.Models;
@@ -7,6 +9,7 @@ using Checkout.ShoppingService.Repositories;
 using Checkout.ShoppingService.Validators;
 using Moq;
 using Newtonsoft.Json;
+using DrinkModel = Checkout.ShoppingService.Models.DrinkModel;
 
 namespace Checkout.ShoppingService.Tests
 {
@@ -15,10 +18,12 @@ namespace Checkout.ShoppingService.Tests
         private Mock<IShoppingRepository> _repository;
         private ShoppingModule _module;
         private Browser _browser;
-        
+        private Mock<IValidateRequest> _validator;
+
         [SetUp]
         public void Setup()
         {
+            _validator = new Mock<IValidateRequest>();
             _repository = new Mock<IShoppingRepository>();
             _module = new ShoppingModule(_repository.Object);
             _browser = new Browser(with => with.Module(_module));
@@ -30,12 +35,14 @@ namespace Checkout.ShoppingService.Tests
             //TODO:
         }
 
-        [TestCase("Fanta", "100")]
-        [TestCase("San Pellegrino", "10")]
-        public void GetDrinks_empty_should_return_notFound(string name, string quantity)
+        [TestCase("Fanta", "100", "10", "0")]
+        [TestCase("San Pellegrino", "10", "10", "0")]
+        public void GetDrinks_empty_should_return_notFound(string name, string quantity, string count, string offset)
         {
             var emptyList = new List<Drink>();
-            _repository.Setup(repo => repo.GetDrinksList()).Returns(emptyList);
+
+            var startTime = DateTime.UtcNow.AddHours(-1);
+            _repository.Setup(repo => repo.GetDrinksList(count, offset, startTime, DateTime.UtcNow)).Returns(emptyList);
 
             var response = _browser.Get("/shopping", with => {
                 with.Header("Accept", "application/json");
@@ -52,7 +59,7 @@ namespace Checkout.ShoppingService.Tests
             var drinkRequest = new DrinkModel { Name = name, Quantity = quantity };
             
             _repository.Setup(repo => repo.AddDrink(drink)).Returns(true);
-            _validator.Setup(validator => validator.GetResult(drinkRequest, true)).Returns("Passed request validations!");
+            _validator.Setup(validator => validator.GetResult(drinkRequest)).Returns("Passed request validations!");
             
             var response = _browser.Post("/shopping/name/quantity", with =>
             {

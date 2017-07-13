@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Checkout.ShoppingService.Helpers;
 using Checkout.ShoppingService.Models;
 using Checkout.ShoppingService.Repositories;
 using Checkout.ShoppingService.Validators;
@@ -17,7 +18,7 @@ namespace Checkout.ShoppingService
         {
             _repository = repository;
 
-            Get["/shopping"] = args => GetDrinks();
+            Get["/shopping/{count}/{offset}/{fromDate}/{toDate}"] = args => GetDrinks(args);
 
             Get["/shopping/{name}"] = args => GetDrink(args);
 
@@ -28,12 +29,12 @@ namespace Checkout.ShoppingService
             Delete["/shopping/{name}"] = args => DeleteDrink(args);
         }
 
-        private Negotiator GetDrinks()
+        private Negotiator GetDrinks(dynamic args)
         {
             try
             {
                 //Service
-                var drinkList = _repository.GetDrinksList();
+                List<Drink> drinkList = _repository.GetDrinksList(args.count, args.offset, args.fromDate, args.toDate);
 
                 if (drinkList.Count == 0)
                 {
@@ -54,9 +55,9 @@ namespace Checkout.ShoppingService
         {
             try
             {
-                var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
-
-                //Validation
+                var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity, DateCreated = DateTime.UtcNow };
+                
+                //Model Validation
                 var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> {new NameValidator()});
             
                 var validationResult = validateRequest.GetResult(drinkModel);
@@ -89,9 +90,9 @@ namespace Checkout.ShoppingService
         {
             try
             {
-                var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
+                var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity, DateCreated = DateTime.UtcNow};
 
-                //Validation
+                //Model Validation
                 var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> { new NameValidator(), new FormatValidator(), new QuantityValidator()});
 
                 var validationResult = validateRequest.GetResult(drinkModel);
@@ -103,7 +104,7 @@ namespace Checkout.ShoppingService
                 }
 
                 //Service
-                var drink = new Drink {Name = args.name, Quantity = args.quantity};
+                var drink = new Drink {Name = args.name, Quantity = args.quantity, DateCreated = DateTime.Now};
                 var result = _repository.AddDrink(drink);
 
                 if (result == false)
@@ -127,7 +128,7 @@ namespace Checkout.ShoppingService
             {
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
-                //Validation
+                //Model Validation
                 var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> { new NameValidator(), new FormatValidator(), new QuantityValidator() });
 
                 var validationResult = validateRequest.GetResult(drinkModel);
@@ -164,7 +165,7 @@ namespace Checkout.ShoppingService
             {
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
-                //Validation
+                //Model Validation
                 var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> { new NameValidator() });
 
                 var validationResult = validateRequest.GetResult(drinkModel);

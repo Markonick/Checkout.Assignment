@@ -1,36 +1,38 @@
 ﻿using System.Collections.Generic;
 using Checkout.ApiServices.SharedModels;
 using Checkout.ApiServices.Shopping.RequestModels;
+using Checkout.ApiServices.Shopping.ResponseModels;
+using Checkout.Utilities;
 
 namespace Checkout.ApiServices.Shopping
 {
     public class ShoppingService
     {
-        public HttpResponse<List<DrinkModel>> GetShoppingList()
+        public HttpResponse<DrinkList> GetShoppingList(DrinkGetList request)
         {
             var getDrinkListUri = ApiUrls.ShoppingList;
 
-            /*if (request.Count.HasValue)
+            if (request.Count.HasValue)
             {
-                getDrinkGetListUri = UrlHelper.AddParameterToUrl(getDrinkGetListUri, "count", request.Count.ToString());
+                getDrinkListUri = UrlHelper.AddParameterToUrl(getDrinkListUri, "count", request.Count.ToString());
             }
 
             if (request.Offset.HasValue)
             {
-                getDrinkGetListUri = UrlHelper.AddParameterToUrl(getDrinkGetListUri, "offset", request.Offset.ToString());
+                getDrinkListUri = UrlHelper.AddParameterToUrl(getDrinkListUri, "offset", request.Offset.ToString());
             }
 
             if (request.FromDate.HasValue)
             {
-                getDrinkGetListUri = UrlHelper.AddParameterToUrl(getDrinkGetListUri, "fromDate", DateTimeHelper.FormatAsUtc(request.FromDate.Value));
+                getDrinkListUri = UrlHelper.AddParameterToUrl(getDrinkListUri, "fromDate", DateTimeHelper.FormatAsUtc(request.FromDate.Value));
             }
 
             if (request.ToDate.HasValue)
             {
-                getDrinkGetListUri = UrlHelper.AddParameterToUrl(getDrinkGetListUri, "toDate", DateTimeHelper.FormatAsUtc(request.ToDate.Value));
-            }*/
+                getDrinkListUri = UrlHelper.AddParameterToUrl(getDrinkListUri, "toDate", DateTimeHelper.FormatAsUtc(request.ToDate.Value));
+            }
 
-            return new ApiHttpClient().GetRequest<List<DrinkModel>>(getDrinkListUri, AppSettings.SecretKey);
+            return new ApiHttpClient().GetRequest<DrinkList>(getDrinkListUri, AppSettings.SecretKey);
         }
 
         public HttpResponse<DrinkCreate> AddDrink(DrinkCreate requestModel)

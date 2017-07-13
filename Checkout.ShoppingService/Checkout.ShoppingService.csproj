@@ -60,6 +60,8 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\CreateShoppingList.cs" />
+    <Compile Include="Helpers\DrinkMapper.cs" />
+    <Compile Include="Models\Pagination.cs" />
     <Compile Include="Validators\FormatValidator.cs" />
     <Compile Include="Validators\IValidateRequest.cs" />
     <Compile Include="Models\DrinkModel.cs" />
