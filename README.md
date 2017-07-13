@@ -42,7 +42,7 @@ Steps to run:
 
 Open the ApiClient and ShoppingService solutions in two Visual Studio instances.
 
-Run the ShoppingService and keep in running in the background. It is running on http://localhost:5000.
+Make sure you have added a reference to Checkout.dll in the Shopping Service. Run the ShoppingService and keep it running in the background. It is running on http://localhost:5000.
 
 To test the ApiClient, I have created some tests in the ShoppingService folder in Checkout.ApiClient.Tests. Run them.
 
