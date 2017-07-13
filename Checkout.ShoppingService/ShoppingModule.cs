@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Checkout.ShoppingService.Models;
 using Checkout.ShoppingService.Repositories;
+using Checkout.ShoppingService.Validators;
+using FluentValidation;
 using Nancy;
 using Nancy.Responses.Negotiation;
 
@@ -9,12 +12,10 @@ namespace Checkout.ShoppingService
     public class ShoppingModule : NancyModule
     {
         private readonly IShoppingRepository _repository;
-        private readonly IRequestValidator _requestValidator;
 
-        public ShoppingModule(IShoppingRepository repository, IRequestValidator requestValidator)
+        public ShoppingModule(IShoppingRepository repository)
         {
             _repository = repository;
-            _requestValidator = requestValidator;
 
             Get["/shopping"] = args => GetDrinks();
 
@@ -56,7 +57,9 @@ namespace Checkout.ShoppingService
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation
-                var validationResult = _requestValidator.GetResult(drinkModel, false);
+                var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> {new NameValidator()});
+            
+                var validationResult = validateRequest.GetResult(drinkModel);
 
                 if (validationResult != "Passed request validations!")
                 {
@@ -89,7 +92,9 @@ namespace Checkout.ShoppingService
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation
-                var validationResult = _requestValidator.GetResult(drinkModel, true);
+                var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> { new NameValidator(), new FormatValidator(), new QuantityValidator()});
+
+                var validationResult = validateRequest.GetResult(drinkModel);
 
                 if (validationResult != "Passed request validations!")
                 {
@@ -123,7 +128,9 @@ namespace Checkout.ShoppingService
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation
-                var validationResult = _requestValidator.GetResult(drinkModel, true);
+                var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> { new NameValidator(), new FormatValidator(), new QuantityValidator() });
+
+                var validationResult = validateRequest.GetResult(drinkModel);
 
                 if (validationResult != "Passed request validations!")
                 {
@@ -158,7 +165,9 @@ namespace Checkout.ShoppingService
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation
-                var validationResult = _requestValidator.GetResult(drinkModel, false);
+                var validateRequest = new ValidateRequest(new List<AbstractValidator<DrinkModel>> { new NameValidator() });
+
+                var validationResult = validateRequest.GetResult(drinkModel);
 
                 if (validationResult != "Passed request validations!")
                 {
