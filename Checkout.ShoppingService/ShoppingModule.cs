@@ -6,6 +6,7 @@ using Checkout.ShoppingService.Validators;
 using FluentValidation;
 using Nancy;
 using Nancy.Responses.Negotiation;
+using Nancy.Security;
 
 namespace Checkout.ShoppingService
 {
@@ -32,6 +33,7 @@ namespace Checkout.ShoppingService
         {
             try
             {
+                //this.RequiresAuthentication();
                 //Service
                 var result = _repository.GetDrinksList();
 
@@ -54,6 +56,7 @@ namespace Checkout.ShoppingService
         {
             try
             {
+                //this.RequiresAuthentication();
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation
@@ -89,6 +92,7 @@ namespace Checkout.ShoppingService
         {
             try
             {
+                //this.RequiresAuthentication();
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation
@@ -125,6 +129,7 @@ namespace Checkout.ShoppingService
         {
             try
             {
+                //this.RequiresAuthentication();
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation
@@ -162,6 +167,7 @@ namespace Checkout.ShoppingService
         {
             try
             {
+                //this.RequiresAuthentication();
                 var drinkModel = new DrinkModel { Name = args.name, Quantity = args.quantity };
 
                 //Validation

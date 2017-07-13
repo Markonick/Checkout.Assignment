@@ -41,6 +41,10 @@
       <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nancy.Authentication.Basic, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Authentication.Basic.1.4.1\lib\net40\Nancy.Authentication.Basic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
       <Private>True</Private>
@@ -60,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\CreateShoppingList.cs" />
+    <Compile Include="IUserMapper.cs" />
     <Compile Include="Validators\FormatValidator.cs" />
     <Compile Include="Validators\IValidateRequest.cs" />
     <Compile Include="Models\DrinkModel.cs" />

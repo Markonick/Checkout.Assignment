@@ -1,8 +1,7 @@
-﻿using Checkout.ShoppingService.Models;
-using Checkout.ShoppingService.Repositories;
-using Checkout.ShoppingService.Validators;
-using FluentValidation;
+﻿using Checkout.ShoppingService.Repositories;
 using Nancy;
+using Nancy.Authentication.Basic;
+using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 
 namespace Checkout.ShoppingService
@@ -10,6 +9,13 @@ namespace Checkout.ShoppingService
     public class Bootstrapper : DefaultNancyBootstrapper
     {
         public static TinyIoCContainer Container;
+
+        /*protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        {
+            base.ApplicationStartup(container, pipelines);
+
+            pipelines.EnableBasicAuthentication(new BasicAuthenticationConfiguration(container.Resolve<IUserValidator>(), "MyShoppingAuth"));
+        }*/
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
