@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Nancy.Testing;
 using Checkout.ShoppingService.Models;
 using Checkout.ShoppingService.Repositories;
+using Checkout.ShoppingService.Validators;
 using Moq;
 using Newtonsoft.Json;
 
@@ -11,7 +12,6 @@ namespace Checkout.ShoppingService.Tests
 {
     public class ShoppingModuleTests
     {
-        private Mock<IRequestValidator> _validator;
         private Mock<IShoppingRepository> _repository;
         private ShoppingModule _module;
         private Browser _browser;
@@ -19,9 +19,8 @@ namespace Checkout.ShoppingService.Tests
         [SetUp]
         public void Setup()
         {
-            _validator = new Mock<IRequestValidator>();
             _repository = new Mock<IShoppingRepository>();
-            _module = new ShoppingModule(_repository.Object, _validator.Object);
+            _module = new ShoppingModule(_repository.Object);
             _browser = new Browser(with => with.Module(_module));
         }
 
