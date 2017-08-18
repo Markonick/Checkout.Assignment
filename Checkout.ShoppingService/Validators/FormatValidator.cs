@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Checkout.ShoppingService.Models;
 using FluentValidation;
 
-namespace Checkout.ShoppingService
+namespace Checkout.ShoppingService.Validators
 {
     public class FormatValidator : AbstractValidator<DrinkModel>
     {

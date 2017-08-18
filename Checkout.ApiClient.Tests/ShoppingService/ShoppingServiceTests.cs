@@ -31,8 +31,7 @@ namespace Tests.ShoppingService
                 FromDate = startTime,
                 ToDate = DateTime.UtcNow
             };
-
-            _list = CheckoutClient.ShoppingService.GetShoppingList(drinkGetListRequest);
+            _list = CheckoutClient.ShoppingService.GetShoppingList(drinkGetListRequest).Model.Data;
 
             foreach (var item in _list.Model.Data)
             {
@@ -216,8 +215,6 @@ namespace Tests.ShoppingService
         [Test]
         public void GetDrinkList()
         {
-            var startTime = DateTime.UtcNow.AddHours(-1); // records for the past hour
-
             var drinkCreateModel1 = TestHelper.GetDrinkCreateModel("Lagunitas", "2");
             var drink1 = CheckoutClient.ShoppingService.AddDrink(drinkCreateModel1);
             var drinkCreateModel2 = TestHelper.GetDrinkCreateModel("Fanta", "20");
@@ -226,17 +223,18 @@ namespace Tests.ShoppingService
             var drink3 = CheckoutClient.ShoppingService.AddDrink(drinkCreateModel3);
             var drinkCreateModel4 = TestHelper.GetDrinkCreateModel("Estrella", "2");
             var drink4 = CheckoutClient.ShoppingService.AddDrink(drinkCreateModel4);
-
+            
+            
+            var startTime = DateTime.UtcNow.AddHours(-1); // records for the past hour
             var drinkGetListRequest = new DrinkGetList
             {
                 FromDate = startTime,
                 ToDate = DateTime.UtcNow
             };
 
-            //Get all customers created
             var response = CheckoutClient.ShoppingService.GetShoppingList(drinkGetListRequest);
 
-            response.Should().NotBeNull();
+            response.Model.Should().NotBeNull();
             response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
             response.Model.Count.Should().BeGreaterOrEqualTo(4);
 

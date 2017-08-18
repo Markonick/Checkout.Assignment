@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Checkout.ShoppingService.Models;
 using Checkout.ShoppingService.Repositories;
@@ -20,7 +21,10 @@ namespace Checkout.ShoppingService.Tests
         [TearDown]
         public void TearDown()
         {
-            _repo.GetDrinksList().Clear();
+            var listCount = 5.ToString();
+            const string offset = "0";
+            var startTime = DateTime.UtcNow.AddHours(-1);
+            _repo.GetDrinksList(listCount, offset, startTime, DateTime.UtcNow).Clear();
         }
 
         [Test]
@@ -33,7 +37,10 @@ namespace Checkout.ShoppingService.Tests
                 _repo.AddDrink(item);
             }
 
-            var drinks = _repo.GetDrinksList();
+            var listCount = list.Count.ToString();
+            const string offset = "0";
+            var startTime = DateTime.UtcNow.AddHours(-1);
+            var drinks = _repo.GetDrinksList(listCount, offset, startTime, DateTime.UtcNow);
 
             Assert.That(drinks.Count, Is.EqualTo(list.Count));
         }
@@ -85,7 +92,8 @@ namespace Checkout.ShoppingService.Tests
             {
                 _repo.AddDrink(item);
             }
-            var drink = new Drink {Name = name, Quantity = quantity};
+            var drink = new Drink { Name = name, Quantity = quantity, DateCreated = DateTime.UtcNow };
+
             _repo.UpdateDrink(drink);
 
             drink = _repo.GetDrink(name);
@@ -105,11 +113,15 @@ namespace Checkout.ShoppingService.Tests
                 _repo.AddDrink(item);
             }
 
-            var drink = new Drink { Name = name, Quantity = quantity };
+            var created = DateTime.UtcNow;
+            var drink = new Drink { Name = name, Quantity = quantity, DateCreated = created };
 
             _repo.UpdateDrink(drink);
 
-            var drinks = _repo.GetDrinksList();
+            var listCount = list.Count.ToString();
+            const string offset = "0";
+            var startTime = DateTime.UtcNow.AddHours(-1);
+            var drinks = _repo.GetDrinksList(listCount, offset, startTime, created);
 
             Assert.That(drinks.Count, Is.EqualTo(expectedCount));
         }
@@ -118,14 +130,19 @@ namespace Checkout.ShoppingService.Tests
         [TestCase("Beer", 10)]
         public void Should_add_drink_successfully(string name, int quantity)
         {
-            var drink = new Drink {Name = name, Quantity = quantity};
+            var created = DateTime.UtcNow;
+            var drink = new Drink {Name = name, Quantity = quantity, DateCreated = created };
             _repo.AddDrink(drink);
 
-            var list = _repo.GetDrinksList();
+            var listCount = 5.ToString();
+            const string offset = "0";
+            var startTime = DateTime.UtcNow.AddHours(-1);
+            var list = _repo.GetDrinksList(listCount, offset, startTime, created);
 
             Assert.That(list.Count, Is.EqualTo(1));
             Assert.That(list.ElementAt(0).Name, Is.EqualTo(name));
             Assert.That(list.ElementAt(0).Quantity, Is.EqualTo(quantity));
+            Assert.That(list.ElementAt(0).DateCreated, Is.EqualTo(created));
         }
 
         [TestCase("Fanta", 4)]
@@ -141,9 +158,15 @@ namespace Checkout.ShoppingService.Tests
 
             _repo.DeleteDrink(name);
 
-            var drinks = _repo.GetDrinksList();
-            
+            var listCount = list.Count.ToString();
+            const string offset = "0";
+            var startTime = DateTime.UtcNow.AddHours(-1);
+            var created = DateTime.UtcNow;
+            var drinks = _repo.GetDrinksList(listCount, offset, startTime, created);
+
             Assert.That(drinks.Count, Is.EqualTo(expectedCount));
+            var result = drinks.FirstOrDefault(x => x.Name == name);
+            Assert.That(result, Is.Null);
         }
 
         [TestCase("", 5)]
@@ -160,7 +183,11 @@ namespace Checkout.ShoppingService.Tests
 
             _repo.DeleteDrink(name);
 
-            var drinks = _repo.GetDrinksList();
+            var listCount = list.Count.ToString();
+            const string offset = "0";
+            var startTime = DateTime.UtcNow.AddHours(-1);
+            var created = DateTime.UtcNow;
+            var drinks = _repo.GetDrinksList(listCount, offset, startTime, created);
 
             Assert.That(drinks.Count, Is.EqualTo(expectedCount));
         }
@@ -169,11 +196,11 @@ namespace Checkout.ShoppingService.Tests
         {
             return new List<Drink>
             {
-                new Drink {Name = "Beer", Quantity = 55},
-                new Drink {Name = "Fanta", Quantity = 15},
-                new Drink {Name = "Coca Cola", Quantity = 20},
-                new Drink {Name = "Orange Juice", Quantity = 20},
-                new Drink {Name = "Evian", Quantity = 30},
+                new Drink {Name = "Beer", Quantity = 55, DateCreated = DateTime.UtcNow},
+                new Drink {Name = "Fanta", Quantity = 15, DateCreated = DateTime.UtcNow},
+                new Drink {Name = "Coca Cola", Quantity = 20, DateCreated = DateTime.UtcNow},
+                new Drink {Name = "Orange Juice", Quantity = 20, DateCreated = DateTime.UtcNow},
+                new Drink {Name = "Evian", Quantity = 30, DateCreated = DateTime.UtcNow},
             };
         }
     }

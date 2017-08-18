@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Checkout.ShoppingService.Models;
 
 namespace Checkout.ShoppingService.Repositories
@@ -9,6 +10,6 @@ namespace Checkout.ShoppingService.Repositories
         bool DeleteDrink(string name);
         bool UpdateDrink(Drink drink);
         Drink GetDrink(string name);
-        List<Drink> GetDrinksList();
+        List<Drink> GetDrinksList(string count, string offset, DateTime? fromDate, DateTime? toDate);
     }
 }
